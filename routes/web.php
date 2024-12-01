@@ -4,8 +4,13 @@ use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\{
+    BerandaController,
     DashboardController,
-
+    AuthController,
+    InsidenController,
+    NoRMController,
+    RuanganController,
+    UserController,
 };
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +23,26 @@ use App\Http\Controllers\{
 |
 */
 
-Route::get('/', [DashboardController::class, 'index'])->name('posyandu.dashboard');
+Route::get('/', [BerandaController::class, 'index'])->name('beranda');
+
+// Auth
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// ADMIN routes
+Route::group(['middleware' => ['role:admin']], function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('insiden', InsidenController::class);
+    Route::resource('no_rm', NoRMController::class);
+    Route::resource('ruangan', RuanganController::class);
+    Route::resource('user', UserController::class);
+    Route::post('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
+    Route::get('/insiden/export', [InsidenController::class, 'export'])->name('insiden.export');
+    
+});
+
+Route::get('/guest', [InsidenController::class, 'guestIndex'])->name('guest.index');
+Route::post('/guest', [InsidenController::class, 'guestStore'])->name('guest.store');
+

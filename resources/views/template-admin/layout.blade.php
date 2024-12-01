@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--favicon-->
-	<link rel="icon" href="{{ asset('env') }}/logotangkas.png" type="image/png"/>
+	<link rel="icon" href="{{ asset('env') }}/logoskmku.jpg" type="image/png"/>
 	<!--plugins-->
 	<link href="{{ asset('admin') }}/assets/plugins/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet"/>
 	<link href="{{ asset('admin') }}/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
@@ -26,7 +26,7 @@
 	<link rel="stylesheet" href="{{ asset('admin') }}/assets/css/semi-dark.css"/>
 	<link rel="stylesheet" href="{{ asset('admin') }}/assets/css/header-colors.css"/>
     @yield('style')
-	<title>Dashboard</title>
+	<title>Dashboard - Pelaporan</title>
 </head>
 
 <body>
@@ -36,10 +36,7 @@
         <div class="sidebar-wrapper" data-simplebar="true">
             <div class="sidebar-header">
 				<div>
-					{{-- <img src="{{ asset('env') }}/logotangkas.png" class="logo-icon" alt="logo icon"> --}}
-				</div>
-				<div>
-					<h4 class="logo-text">Dashboard</h4>
+					<h4 class="logo-text">Pelaporan</h4>
 				</div>
 				<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
 				</div>
@@ -340,11 +337,15 @@
 					</div>
 					<div class="user-box dropdown">
 						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="https://cdn-icons-png.flaticon.com/512/9187/9187604.png" class="user-img" alt="user avatar">
 						
 							<div class="user-info ps-3">
+								@auth
+									<p class="user-name mb-0">{{ Auth::user()->nama }}</p>
+									<p class="designation mb-0">{{ '@' . Auth::user()->username }}</p>
+								@else
 									<p class="user-name mb-0">Guest</p>
 									<p class="designation mb-0">Not Logged In</p>
+								@endauth
 							</div>
 						</a>
 						
@@ -435,7 +436,8 @@
 	
 	<!--app JS-->
 
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="{{ asset('admin') }}/assets/js/index.js"></script>
 
 </body>
 

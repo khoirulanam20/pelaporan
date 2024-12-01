@@ -1,64 +1,81 @@
+document.addEventListener('DOMContentLoaded', function() {
+  "use strict";
+  
+  // Pastikan elemen canvas ada
+  const chartElement = document.getElementById("insidenChart");
+  if (!chartElement) return;
+  
+  var ctx = chartElement.getContext('2d');
+ 
+  var gradientStroke3 = ctx.createLinearGradient(0, 0, 0, 300);
+  gradientStroke3.addColorStop(0, '#14abef');
+  gradientStroke3.addColorStop(1, '#14abef');
+
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  let selectedLabels = months;
+  let selectedData = [];
+
+  // Jika ada bulan yang dipilih
+  if (typeof selectedMonths !== 'undefined' && selectedMonths.length > 0) {
+      selectedLabels = selectedMonths.map(m => months[m-1]);
+      selectedData = selectedMonths.map(m => {
+          const index = m - 1;
+          return dataInsiden.total[index] || 0;
+      });
+  } else {
+      selectedData = dataInsiden.total;
+  }
+
+  // Hancurkan chart yang ada jika ada
+  if (window.myChart instanceof Chart) {
+      window.myChart.destroy();
+  }
+
+  window.myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: selectedLabels,
+          datasets: [
+            {
+              label: 'Total Insiden',
+              data: selectedData,
+              borderColor: gradientStroke3,
+              backgroundColor: gradientStroke3,
+              hoverBackgroundColor: gradientStroke3,
+              pointRadius: 0,
+              fill: false,
+              borderWidth: 0
+          }]
+      },
+      options: {
+          maintainAspectRatio: false,
+          plugins: {
+              legend: {
+                  position: 'bottom',
+                  display: true,
+                  labels: {
+                      boxWidth: 8
+                  }
+              },
+              tooltip: {
+                  displayColors: false
+              }
+          },
+          scales: {
+              x: {
+                  barPercentage: 0.5
+              },
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+});	 
+ 
+
 $(function() {
     "use strict";
-
-	
-// chart 1
-
-  var ctx = document.getElementById("chart1").getContext('2d');
-   
-  var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
-      gradientStroke1.addColorStop(0, '#6078ea');  
-      gradientStroke1.addColorStop(1, '#17c5ea'); 
-   
-  var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
-      gradientStroke2.addColorStop(0, '#ff8359');
-      gradientStroke2.addColorStop(1, '#ffdf40');
-
-      var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-          datasets: [{
-            label: 'Laptops',
-            data: [65, 59, 80, 81,65, 59, 80, 81,59, 80, 81,65],
-            borderColor: gradientStroke1,
-            backgroundColor: gradientStroke1,
-            hoverBackgroundColor: gradientStroke1,
-            pointRadius: 0,
-            fill: false,
-            borderWidth: 0
-          }, {
-            label: 'Mobiles',
-            data: [28, 48, 40, 19,28, 48, 40, 19,40, 19,28, 48],
-            borderColor: gradientStroke2,
-            backgroundColor: gradientStroke2,
-            hoverBackgroundColor: gradientStroke2,
-            pointRadius: 0,
-            fill: false,
-            borderWidth: 0
-          }]
-        },
-		
-		options:{
-		  maintainAspectRatio: false,
-		  legend: {
-			  position: 'bottom',
-              display: false,
-			  labels: {
-                boxWidth:8
-              }
-            },
-			tooltips: {
-			  displayColors:false,
-			},	
-		  scales: {
-			  xAxes: [{
-				barPercentage: .5
-			  }]
-		     }
-		}
-      });
-	  
 	 
 // chart 2
 
@@ -78,8 +95,8 @@ $(function() {
       gradientStroke3.addColorStop(1, '#ff6a00');
 	  
 	var gradientStroke4 = ctx.createLinearGradient(0, 0, 0, 300);
-      gradientStroke4.addColorStop(0, '#42e695');
-      gradientStroke4.addColorStop(1, '#3bb2b8');
+      gradientStroke4.addColorStop(0, '#14abef');
+      gradientStroke4.addColorStop(1, '#14abef');
 
       var myChart = new Chart(ctx, {
         type: 'doughnut',
