@@ -106,7 +106,11 @@
                     <div class="col-12">
                         <div class="form-group mb-3">
                             <label for="investigasi_lengkap">Investigasi Lengkap</label>
-                            <input type="text" name="investigasi_lengkap" class="form-control" value="{{ $insiden->investigasi_lengkap }}">
+                            <select name="investigasi_lengkap" class="form-control">
+                                <option value="">Pilih Investigasi</option>
+                                <option value="Ya">Ya</option>
+                                <option value="Tidak">Tidak</option>
+                            </select>
                         </div>
                     </div>
 
@@ -115,8 +119,8 @@
                             <label for="investigasi_lanjut">Investigasi Lanjut</label>
                             <select name="investigasi_lanjut" class="form-control">
                                 <option value="">Pilih Investigasi</option>
-                                <option value="Investigasi 1">Investigasi 1</option>
-                                <option value="Investigasi 2">Investigasi 2</option>
+                                <option value="Ya">Ya</option>
+                                <option value="Tidak">Tidak</option>
                             </select>
                         </div>
                     </div>

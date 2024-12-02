@@ -134,6 +134,7 @@
                 @foreach ($selectedMonths as $bulan)
                     <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
                 @endforeach
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
@@ -144,8 +145,13 @@
                     @foreach ($selectedMonths as $bulan)
                         <td>{{ $data[$bulan] }}</td>
                     @endforeach
+                    <td style="font-weight: bold;">{{ array_sum($data) }}</td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan="{{ count($selectedMonths) + 2 }}" style="text-align: center; font-weight: bold;">Total</td>
+                <td style="font-weight: bold;">{{ $totalInsiden }}</td>
+            </tr>
         </tbody>
     </table>
 
@@ -158,6 +164,7 @@
                 @foreach ($selectedMonths as $bulan)
                     <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
                 @endforeach
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
@@ -168,8 +175,13 @@
                     @foreach ($selectedMonths as $bulan)
                         <td>{{ $jumlahInsidenPerBulan[$item->jenis_insiden][$bulan] }}</td>
                     @endforeach
+                    <td style="font-weight: bold;">{{ array_sum($jumlahInsidenPerBulan[$item->jenis_insiden]) }}</td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan="{{ count($selectedMonths) + 2 }}" style="text-align: center; font-weight: bold;">Total</td>
+                <td style="font-weight: bold;">{{ $totalInsiden }}</td>
+            </tr>
         </tbody>
     </table>
 
@@ -208,10 +220,7 @@
                 </tr>
             @endforeach
             <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold;">Total</td>
-                @foreach ($selectedMonths as $bulan)
-                    <td style="font-weight: bold;">{{ $totalPerBulan[$bulan] }}</td>
-                @endforeach
+                <td colspan="{{ count($selectedMonths) + 2 }}" style="text-align: center; font-weight: bold;">Total</td>
                 <td style="font-weight: bold;">{{ $grandTotal }}</td>
             </tr>
         </tbody>
@@ -252,10 +261,7 @@
                 </tr>
             @endforeach
             <tr>
-                <td colspan="2" style="text-align: center; font-weight: bold;">Total</td>
-                @foreach ($selectedMonths as $bulan)
-                    <td style="font-weight: bold;">{{ $totalPerBulan[$bulan] }}</td>
-                @endforeach
+                <td colspan="{{ count($selectedMonths) + 2 }}" style="text-align: center; font-weight: bold;">Total</td>
                 <td style="font-weight: bold;">{{ $grandTotal }}</td>
             </tr>
         </tbody>
@@ -346,23 +352,7 @@
     <div class="rekomendasi">
         <h3>Rekomendasi</h3>
         <ul>
-            <li>Penguatan edukasi pada pasien risiko jatuh</li>
-            <li>Pengusulan bel pasien untuk ruang transit</li>
-            <li>Pengusulan ulang leaflet resiko jatuh dengan pemilihan kata kata yang tepat dan mudah di pahami</li>
-            <li>Penguatan edukasi pada pasien resiko jatuh</li>
-            <li>Penekanan edukasi untuk menggunakan sandal yang tidak licin</li>
-            <li>Memfungsikan pegangan kamar mandi untuk pegangan bukan tempat urinal dan pispot</li>
-            <li>Pengusulan pembuatan Rak untuk tempat Pispot dan Urinal</li>
-            <li>Lakukan Monev pembersihan kamar mandi yang dilakukan oleh Cleaning service</li>
-            <li>Adanya Supervisor untuk memantau pekerjaan cleaning service ( Bidang penunjang dan sanitasi )</li>
-            <li>Refresh kepada Cleaning service terkait SPO pembersihan kamar mandi dll</li>
-            <li>Pengusulan ceck list untuk evaluasi pekerjaan Cleaning service</li>
-            <li>Kaji ulang terkait SPO Rekonsiliasi obat</li>
-            <li>Pengusulan bel pasien untuk ruang transit</li>
-            <li>Koordinasi dengan farmasi terkait retur obat dan dispensing</li>
-            <li>Pengusulan pembuatan barcode untuk penggunaan alat</li>
-            <li>Follow up jadwal kalibrasi alat</li>
-            <li>Koordinasikan dengan farmasi terkait jadwal visitasi ke ruangan</li>
+            <li>Isi rekomendasi disini</li>
         </ul>
     </div>
 

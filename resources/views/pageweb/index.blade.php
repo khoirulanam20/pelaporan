@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sistem Pelaporan Insiden - RSUD</title>
+    <link rel="icon" href="{{ asset('env') }}/icon-rsud.png" type="image/png"/>
     
     <!-- CSS -->
     <link href="{{ asset('admin') }}/assets/css/bootstrap.min.css" rel="stylesheet">
@@ -257,7 +258,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        <a class="nav-link" href="{{ route('login') }}"><i class='bx bx-user' style="font-size: 1.5rem;"></i></a>
                     </li>
                 </ul>
             </div>
@@ -282,6 +283,9 @@
                                 <div class="stat-label">Respon Cepat</div>
                             </div>
                         </div>
+                        <div class="hero-button" style="margin-top: 2rem;">
+                            <a href="#form-section" class="btn btn-primary btn-lg">Lapor Insiden</a>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -295,7 +299,7 @@
     </section>
 
     <!-- Form Section -->
-    <section class="form-section">
+    <section class="form-section" id="form-section">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-12">

@@ -20,7 +20,7 @@ class InsidenController extends Controller
         $noRMs = NoRM::all();
         $ruangans = Ruangan::all();
         $grading = ['Biru', 'Hijau', 'Kuning', 'Merah'];
-        $investigasiLanjut = ['Investigasi 1', 'Investigasi 2'];
+        $investigasiLanjut = ['Ya', 'Tidak'];
         
         return view('pageadmin.insiden.create', compact('noRMs', 'ruangans', 'grading', 'investigasiLanjut'));
     }
@@ -60,7 +60,7 @@ class InsidenController extends Controller
             'tanggal_selesai' => 'nullable|date',
             'manajemen_risiko' => 'nullable|string',
             'investigasi_lengkap' => 'nullable|string',
-            'investigasi_lanjut' => 'nullable|in:Investigasi 1,Investigasi 2',
+            'investigasi_lanjut' => 'nullable|in:Ya,Tidak',
             'investigasi_setelah_grading' => 'nullable|string',
             'tanggal_investigasi_lengkap' => 'nullable|date'
         ]);
@@ -81,7 +81,7 @@ class InsidenController extends Controller
         $noRMs = NoRM::all();
         $ruangans = Ruangan::all();
         $grading = ['Biru', 'Hijau', 'Kuning', 'Merah'];
-        $investigasiLanjut = ['Investigasi 1', 'Investigasi 2'];
+        $investigasiLanjut = ['Ya', 'Tidak'];
         
         return view('pageadmin.insiden.edit', compact('insiden', 'noRMs', 'ruangans', 'grading', 'investigasiLanjut'));
     }
@@ -102,7 +102,7 @@ class InsidenController extends Controller
             'tanggal_selesai' => 'nullable|date',
             'manajemen_risiko' => 'nullable|string',
             'investigasi_lengkap' => 'nullable|string',
-            'investigasi_lanjut' => 'nullable|in:Investigasi 1,Investigasi 2',
+            'investigasi_lanjut' => 'nullable|in:Ya,Tidak',
             'investigasi_setelah_grading' => 'nullable|string',
             'tanggal_investigasi_lengkap' => 'nullable|date'
         ]);

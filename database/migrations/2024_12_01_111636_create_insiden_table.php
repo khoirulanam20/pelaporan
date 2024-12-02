@@ -46,7 +46,7 @@ return new class extends Migration
             $table->date('tanggal_selesai')->nullable()->after('tanggal_mulai');
             $table->string('manajemen_risiko')->nullable()->after('tanggal_selesai');
             $table->string('investigasi_lengkap')->nullable()->after('manajemen_risiko');
-            $table->enum('investigasi_lanjut', ['Investigasi 1', 'Investigasi 2'])->nullable()->after('investigasi_lengkap');
+            $table->enum('investigasi_lanjut', ['Ya', 'Tidak'])->nullable()->after('investigasi_lengkap');
             $table->string('investigasi_setelah_grading')->nullable()->after('investigasi_lanjut');
             $table->date('tanggal_investigasi_lengkap')->nullable()->after('investigasi_setelah_grading');
         });

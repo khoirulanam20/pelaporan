@@ -122,6 +122,7 @@
                         <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
                     @endfor
                 @endif
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
@@ -138,8 +139,13 @@
                             <td>{{ $data[$bulan] }}</td>
                         @endfor
                     @endif
+                    <td>{{ array_sum($data) }}</td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan="{{ count($selectedMonths) + 2 }}" style="text-align: center; font-weight: bold;">Total</td>
+                <td style="font-weight: bold;">{{ $totalInsiden }}</td>
+            </tr>
         </tbody>
     </table>
 
@@ -158,6 +164,7 @@
                         <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
                     @endfor
                 @endif
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
@@ -167,31 +174,40 @@
                     <td>{{ $item->jenis_insiden }}</td>
                     @if (!empty($selectedMonths))
                         @foreach ($selectedMonths as $bulan)
-                            @if (is_array($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan]))
-                                @foreach ($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan] as $jumlah)
-                                    <td>{{ $jumlah }}</td>
-                                @endforeach
+                            @if (isset($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan]))
+                                @if (is_array($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan]))
+                                    <td>{{ array_sum($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan]) }}</td>
+                                @else
+                                    <td>{{ $jumlahInsidenPerBulan[$item->jenis_insiden][$bulan] }}</td>
+                                @endif
                             @else
-                                <td>{{ $jumlahInsidenPerBulan[$item->jenis_insiden][$bulan] }}</td>
+                                <td>0</td>
                             @endif
                         @endforeach
                     @else
                         @for ($bulan = 1; $bulan <= 12; $bulan++)
-                            @if (is_array($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan]))
-                                @foreach ($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan] as $jumlah)
-                                    <td>{{ $jumlah }}</td>
-                                @endforeach
+                            @if (isset($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan]))
+                                @if (is_array($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan]))
+                                    <td>{{ array_sum($jumlahInsidenPerBulan[$item->jenis_insiden][$bulan]) }}</td>
+                                @else
+                                    <td>{{ $jumlahInsidenPerBulan[$item->jenis_insiden][$bulan] }}</td>
+                                @endif
                             @else
-                                <td>{{ $jumlahInsidenPerBulan[$item->jenis_insiden][$bulan] }}</td>
+                                <td>0</td>
                             @endif
                         @endfor
                     @endif
+                    <td>{{ isset($item['data']) ? array_sum($item['data']) : 0 }}</td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan="{{ count($selectedMonths) + 2 }}" style="text-align: center; font-weight: bold;">Total</td>
+                <td style="font-weight: bold;">{{ $totalInsiden }}</td>
+            </tr>
         </tbody>
     </table>
 
-    <h3>4. Menurut Waktu Grading</h3>
+    <h3>4. Menurut Warna Grading</h3>
     <table class="table">
         <thead>
             <tr>
@@ -206,7 +222,7 @@
                         <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
                     @endfor
                 @endif
-                <th>Total</th>
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
@@ -240,6 +256,10 @@
                         <td>{{ array_sum($item['data']) }}</td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td colspan="{{ count($selectedMonths) + 2 }}" style="text-align: center; font-weight: bold;">Total</td>
+                    <td style="font-weight: bold;">{{ $totalInsiden }}</td>
+                </tr>
             @else
                 <tr>
                     <td colspan="{{ count($selectedMonths) + 4 }}" class="text-center">Tidak ada data</td>
@@ -263,7 +283,7 @@
                         <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
                     @endfor
                 @endif
-                <th>Total</th>
+                <th>Jumlah</th>
             </tr>
         </thead>
         <tbody>
@@ -284,6 +304,10 @@
                         <td>{{ $tempat['total'] }}</td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td colspan="{{ count($selectedMonths) + 2 }}" style="text-align: center; font-weight: bold;">Total</td>
+                    <td style="font-weight: bold;">{{ $totalInsiden }}</td>
+                </tr>
             @else
                 <tr>
                     <td colspan="{{ count($selectedMonths) + 4 }}" class="text-center">Tidak ada data</td>

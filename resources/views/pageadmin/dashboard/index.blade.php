@@ -189,9 +189,9 @@
                                         </a>
                                     </form>
                                     <a href="{{ route('dashboard.export') }}" class="dropdown-item">
-                                        Print Data
+                                        <i class="bx bx-export"></i> Export PDF
                                     </a>
-                                    <a href="{{ route('dashboard.export-word') }}" class="btn btn-primary">
+                                    <a href="{{ route('dashboard.export-word') }}" class="dropdown-item">
                                         <i class="bx bx-export"></i> Export Word
                                     </a>
                                 </li>
