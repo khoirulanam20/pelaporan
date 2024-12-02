@@ -1,237 +1,274 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{{ asset('admin') }}/assets/images/favicon-32x32.png" type="image/png" />
-    <link href="{{ asset('admin') }}/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
-    <link href="{{ asset('admin') }}/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
-    <link href="{{ asset('admin') }}/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
-    <link href="{{ asset('admin') }}/assets/css/pace.min.css" rel="stylesheet" />
-    <script src="{{ asset('admin') }}/assets/js/pace.min.js"></script>
+    <title>Sistem Pelaporan Insiden - RSUD</title>
+    
+    <!-- CSS -->
     <link href="{{ asset('admin') }}/assets/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ asset('admin') }}/assets/css/bootstrap-extended.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link href="{{ asset('admin') }}/assets/css/app.css" rel="stylesheet">
     <link href="{{ asset('admin') }}/assets/css/icons.css" rel="stylesheet">
-    <title>Form Pelaporan Insiden</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #6c757d;
-            --success-color: #198754;
-            --background-color: #f8f9fa;
-            --text-color: #212529;
-            --border-color: #dee2e6;
+            --primary-color: #2563eb;
+            --secondary-color: #475569;
+            --accent-color: #0ea5e9;
+            --success-color: #22c55e;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
             --shadow-color: rgba(0, 0, 0, 0.1);
         }
 
         body {
-            background: var(--background-color) !important;
-            color: var(--text-color);
             font-family: 'Roboto', sans-serif;
-            line-height: 1.6;
+            background-color: var(--background-color);
         }
 
-        /* Navbar Styling */
+        /* Navbar */
         .navbar {
-            background: #fff !important;
+            background: white;
             box-shadow: 0 2px 4px var(--shadow-color);
-            padding: 1rem 0;
         }
 
-        .navbar-brand img {
-            height: 40px;
-            width: auto;
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
         }
 
-        .nav-link {
-            color: var(--text-color) !important;
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            transition: color 0.3s ease;
+        /* Hero Section Styling */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .nav-link:hover {
-            color: var(--primary-color) !important;
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(100px, -100px);
         }
 
-        .nav-link i {
-            margin-right: 0.5rem;
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(-50px, 50px);
         }
 
-        /* Main Content */
-        .wrapper {
-            margin-top: 90px;
-            min-height: calc(100vh - 160px);
-            padding: 2rem 0;
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
 
-        /* Card Styling */
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px var(--shadow-color);
-            margin-bottom: 2rem;
-        }
-
-        .card-body {
-            padding: 2.5rem;
-        }
-
-        /* Form Styling */
-        .form-label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-
-        .form-control {
-            border-radius: 6px;
-            padding: 0.625rem 1rem;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
-
-        .form-select {
-            border-radius: 6px;
-            padding: 0.625rem 1rem;
-        }
-
-        /* Button Styling */
-        .btn {
-            padding: 0.625rem 1.5rem;
-            font-weight: 500;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            border-color: #0a58ca;
-        }
-
-        /* Alert Styling */
-        .alert {
-            border-radius: 6px;
-            padding: 1rem;
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
             margin-bottom: 1.5rem;
+            color: white;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .alert-success {
-            background-color: #d1e7dd;
-            border-color: #badbcc;
-            color: var(--success-color);
+        .hero p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 600px;
         }
 
-        /* Section Styling */
-        .section-title {
-            color: var(--text-color);
-            font-size: 1.75rem;
-            font-weight: 500;
+        .hero-image {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .hero-stats {
+            margin-top: 2rem;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            color: white;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
 
-        .section-subtitle {
-            color: var(--secondary-color);
-            font-size: 1rem;
-            margin-bottom: 2rem;
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
-        /* Footer Styling */
-        footer {
-            background: #fff;
-            padding: 1rem 0;
-            text-align: center;
-            box-shadow: 0 -2px 4px var(--shadow-color);
+        /* Form Section */
+        .form-section {
+            background: white;
+            padding: 40px 0;
         }
 
-        footer p {
-            margin: 0;
-            color: var(--secondary-color);
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            padding: 2rem;
         }
 
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .wrapper {
-                margin-top: 80px;
-                padding: 1rem 0;
-            }
-
-            .card-body {
-                padding: 1.5rem;
-            }
-
-            .section-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        /* Form Group Spacing */
         .form-group {
             margin-bottom: 1.5rem;
         }
 
-        /* Table Styling */
-        .table {
-            margin-bottom: 0;
+        .form-control, .form-select {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
-        .table th {
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+        }
+
+        .form-label {
             font-weight: 500;
-            background-color: rgba(0,0,0,.02);
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
         }
 
-        /* Custom Spacing */
-        .mb-4 {
-            margin-bottom: 2rem !important;
+        /* Button */
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
-        .mt-4 {
-            margin-top: 2rem !important;
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* Alert */
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 -2px 4px var(--shadow-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 100px 0 60px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-image {
+                margin-top: 3rem;
+            }
+            
+            .form-card {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="wrapper">
-        <header>
-            <nav class="navbar navbar-expand-lg fixed-top">
-                <div class="container">
-                    <a class="navbar-brand" href="#">
-                        <h5 class="logo-text">Pelaporan IKP</h5>
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#"><i class='bx bx-home-alt me-1'></i>Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}"><i class='bx bx-user me-1'></i>Login</a>
-                            </li>
-                        </ul>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">RSUD Kabupaten Temanggung</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1>Sistem Pelaporan Insiden Keselamatan Pasien</h1>
+                        <p>Laporkan insiden keselamatan pasien dengan mudah dan aman melalui sistem pelaporan digital kami.</p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">24/7</div>
+                                <div class="stat-label">Layanan</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number"><i class='bx bx-time'></i></div>
+                                <div class="stat-label">Respon Cepat</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </nav>
-        </header>
+                <div class="col-lg-6">
+                    <div class="hero-image">
+                        <img src="{{ asset('admin') }}/assets/images/healthcare-hero.png" alt="Healthcare Illustration" 
+                             class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Form Section -->
+    <section class="form-section">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-10">
+                <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="text-center mb-4">
@@ -451,18 +488,34 @@
                 </div>
             </div>
         </div>
+    </section>
 
-        <footer class="text-center">
-            <p class="mb-0">Copyright © 2024. All right reserved.</p>
-        </footer>
-    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p class="mb-0">Copyright © {{ date('Y') }} RSUD. All rights reserved.</p>
+        </div>
+    </footer>
 
+    <!-- Scripts -->
     <script src="{{ asset('admin') }}/assets/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('admin') }}/assets/js/jquery.min.js"></script>
-    <script src="{{ asset('admin') }}/assets/plugins/simplebar/js/simplebar.min.js"></script>
-    <script src="{{ asset('admin') }}/assets/plugins/metismenu/js/metisMenu.min.js"></script>
-    <script src="{{ asset('admin') }}/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-    <script src="{{ asset('admin') }}/assets/js/app.js"></script>
+    <script>
+        // Form validation
+        (function() {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
 </body>
-
 </html>
