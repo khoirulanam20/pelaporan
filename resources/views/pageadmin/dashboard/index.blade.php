@@ -188,8 +188,11 @@
                                             Reset Filter
                                         </a>
                                     </form>
-                                    <a href="{{ route('insiden.export') }}" class="dropdown-item">
-                                        Export Data
+                                    <a href="{{ route('dashboard.export') }}" class="dropdown-item">
+                                        Print Data
+                                    </a>
+                                    <a href="{{ route('dashboard.export-word') }}" class="btn btn-primary">
+                                        <i class="bx bx-export"></i> Export Word
                                     </a>
                                 </li>
                             </ul>

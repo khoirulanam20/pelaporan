@@ -6,6 +6,7 @@
             <div class="menu-title">Dashboard</div>
         </a>
     </li>
+    @if (Auth::user()->role == 'admin')
     <li>
         <a href="javascript:;" class="has-arrow">
             <div class="parent-icon"><i class='bx bx-data'></i></div>
@@ -27,6 +28,7 @@
         <a href="/insiden">
             <div class="parent-icon"><i class='bx bx-error-circle'></i></div>
             <div class="menu-title">Insiden</div>
-        </a>
-    </li>
+            </a>
+        </li>
+    @endif
 </ul>

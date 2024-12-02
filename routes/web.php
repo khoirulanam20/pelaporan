@@ -44,6 +44,17 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('/dashboard/data', [DashboardController::class, 'getData'])->name('dashboard.getData');
 });
 
+Route::group(['middleware' => ['role:admin,user']], function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
+    Route::get('/insiden/export', [InsidenController::class, 'export'])->name('insiden.export');
+    Route::post('/dashboard/reset-filter', [DashboardController::class, 'resetFilter'])->name('dashboard.reset-filter');
+    Route::get('/dashboard/data', [DashboardController::class, 'getData'])->name('dashboard.getData');
+});
+
 Route::get('/guest', [InsidenController::class, 'guestIndex'])->name('guest.index');
 Route::post('/guest', [InsidenController::class, 'guestStore'])->name('guest.store');
-
+Route::get('/insiden/export', [DashboardController::class, 'exportPDF'])->name('insiden.export');
+Route::get('/dashboard/export', [DashboardController::class, 'exportPDF'])->name('dashboard.export');
+Route::get('/dashboard/export-word', [DashboardController::class, 'exportWord'])->name('dashboard.export-word');
