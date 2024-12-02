@@ -83,19 +83,27 @@
                 <th>Periode</th>
                 <th>Bulan</th>
                 <th>Jumlah Insiden</th>
-                <th>Total</th>
             </tr>
         </thead>
         <tbody>
+            @php
+                $totalInsiden = 0;
+            @endphp
             @foreach ($dataInsiden as $insiden)
+                @php
+                    $totalInsiden += $insiden['jumlah_insiden'];
+                @endphp
                 <tr>
                     <td>{{ $insiden['no'] }}</td>
                     <td>{{ $insiden['periode'] }}</td>
                     <td>{{ $insiden['bulan'] }}</td>
                     <td>{{ $insiden['jumlah_insiden'] }}</td>
-                    <td>{{ $insiden['total'] }}</td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan="3" style="text-align: center; font-weight: bold;">Total</td>
+                <td style="font-weight: bold;">{{ $totalInsiden }}</td>
+            </tr>
         </tbody>
     </table>
 
@@ -368,7 +376,7 @@
     @endphp
     {{ $maxTempat }} yaitu {{ $maxJumlahTempat }} kejadian dari jumlah keseluruhan {{ $totalKejadian }} kejadian ({{ $persentaseTempat }}%).</p>
 
-    <h3>Rekomendasi</h3>
+    {{-- <h3>Rekomendasi</h3>
     <ul>
         <li>Penguatan edukasi pada pasien risiko jatuh</li>
         <li>Pengusulan bel pasien untuk ruang transit</li>
@@ -387,7 +395,7 @@
         <li>Pengusulan pembuatan barcode untuk penggunaan alat</li>
         <li>Follow up jadwal kalibrasi alat</li>
         <li>Koordinasikan dengan farmasi terkait jadwal visitasi ke ruangan</li>
-    </ul>
+    </ul> --}}
 
     <div style="margin-top: 50px; text-align: center; float: right; width: 250px;">
         <p>Ketua Komite Mutu</p>

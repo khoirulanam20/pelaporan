@@ -210,7 +210,7 @@
             <nav class="navbar navbar-expand-lg fixed-top">
                 <div class="container">
                     <a class="navbar-brand" href="#">
-                        <h3>Form Pelaporan Insiden</h3>
+                        <h5 class="logo-text">Pelaporan IKP</h5>
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span class="navbar-toggler-icon"></span>
