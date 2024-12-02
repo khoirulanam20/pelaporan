@@ -16,7 +16,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required|string|min:8',
         ]);
 
@@ -24,18 +24,14 @@ class AuthController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            if ($user->role === 'admin') {
-                return redirect()->route('dashboard');
-            } else {
-                return redirect()->route('dashboard ');
-            }
+            return redirect()->route('dashboard');
         }
 
-        return redirect()->back()->with('error', 'Invalid credentials');
+        return redirect()->back()->with('error', 'Username atau password salah');
     }
 
     public function logout()

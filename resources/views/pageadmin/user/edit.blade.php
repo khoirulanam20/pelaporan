@@ -10,6 +10,11 @@
                 @method('PUT')
                 
                 <div class="row">
+                    <div class="form-group">
+                        <label for="nama">Nama</label>
+                        <input type="text" name="nama" class="form-control" value="{{ $user->nama }}">
+                    </div>
+
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label for="username">Username</label>

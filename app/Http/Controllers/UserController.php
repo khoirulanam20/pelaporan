@@ -23,6 +23,7 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'username' => 'required|max:255',
+            'nama' => 'required|max:255',
             'email' => 'required|email|unique:users,email',
             'role' => 'required',
             'password' => 'required|min:6'
@@ -50,6 +51,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'username' => 'required|string|max:255',
+            'nama' => 'required|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|min:6',
             'role' => 'required|in:admin,user'
@@ -57,6 +59,7 @@ class UserController extends Controller
 
         try {
             $user->username = $validated['username'];
+            $user->nama = $validated['nama'];
             $user->email = $validated['email'];
             $user->role = $validated['role'];
             

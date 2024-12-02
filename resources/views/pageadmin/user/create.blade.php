@@ -8,6 +8,10 @@
                 <form action="{{ route('user.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
+                        <label for="nama">Nama</label>
+                        <input type="text" name="nama" class="form-control">
+                    </div>
+                    <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" name="username" class="form-control">
                     </div>
