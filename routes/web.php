@@ -41,7 +41,7 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::post('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
     Route::get('/insiden/export', [InsidenController::class, 'export'])->name('insiden.export');
     Route::post('/dashboard/reset-filter', [DashboardController::class, 'resetFilter'])->name('dashboard.reset-filter');
-    
+    Route::get('/dashboard/data', [DashboardController::class, 'getData'])->name('dashboard.getData');
 });
 
 Route::get('/guest', [InsidenController::class, 'guestIndex'])->name('guest.index');

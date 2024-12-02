@@ -10,42 +10,39 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Reset session filter bulan
         session()->forget('selectedMonths');
+        session()->forget('selectedYear');
         
-        $selectedMonths = range(1, 12); // Set default ke semua bulan
+        $selectedMonths = range(1, 12);
+        $selectedYear = date('Y');
         
-        // Ambil semua insiden dan jenis insiden yang unik
-        $insiden = Insiden::all();
+        $insiden = Insiden::whereYear('waktu_insiden', $selectedYear)->get();
         $jenisInsiden = Insiden::select('jenis_insiden')->distinct()->get();
         
-        // Inisialisasi array untuk menyimpan data per jenis insiden per bulan
         $dataPerJenisPerBulan = [];
         
         foreach ($jenisInsiden as $jenis) {
             $dataPerJenisPerBulan[$jenis->jenis_insiden] = array_fill(1, 12, 0);
             
-            // Hitung jumlah insiden per bulan untuk setiap jenis
             $insidenPerBulan = Insiden::select(
-                DB::raw('MONTH(created_at) as bulan'),
+                DB::raw('MONTH(waktu_insiden) as bulan'),
                 DB::raw('COUNT(*) as total')
             )
             ->where('jenis_insiden', $jenis->jenis_insiden)
-            ->whereYear('created_at', date('Y'))
+            ->whereYear('waktu_insiden', $selectedYear)
             ->groupBy('bulan')
             ->get();
             
-            // Isi data ke array
             foreach ($insidenPerBulan as $data) {
                 $dataPerJenisPerBulan[$jenis->jenis_insiden][$data->bulan] = $data->total;
             }
         }
         
         $insidenTotal = Insiden::select(
-            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('MONTH(waktu_insiden) as bulan'),
             DB::raw('COUNT(*) as total')
         )
-        ->whereYear('created_at', date('Y'))
+        ->whereYear('waktu_insiden', $selectedYear)
         ->groupBy('bulan')
         ->get();
         
@@ -59,19 +56,21 @@ class DashboardController extends Controller
             $dataPerBulan['total'][$item->bulan] = $item->total;
         }
         
-        // Hitung insiden bulan ini dan persentase
         $currentMonth = date('m');
         $currentYear = date('Y');
         
-        $insidenBulanIni = Insiden::whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
-            ->count();
-            
         $lastMonth = date('m', strtotime('-1 month'));
         $lastMonthYear = $lastMonth == 12 ? $currentYear - 1 : $currentYear;
         
-        $insidenBulanLalu = Insiden::whereMonth('created_at', $lastMonth)
-            ->whereYear('created_at', $lastMonthYear)
+        setlocale(LC_TIME, 'id_ID');
+        $lastMonthName = strftime('%B', strtotime("$lastMonthYear-$lastMonth-01"));
+        
+        $insidenBulanIni = Insiden::whereMonth('waktu_insiden', $currentMonth)
+            ->whereYear('waktu_insiden', $currentYear)
+            ->count();
+            
+        $insidenBulanLalu = Insiden::whereMonth('waktu_insiden', $lastMonth)
+            ->whereYear('waktu_insiden', $lastMonthYear)
             ->count();
         
         $percentage = $insidenBulanLalu > 0 
@@ -80,10 +79,11 @@ class DashboardController extends Controller
             
         $monthlyData = [
             'month' => $insidenBulanIni,
-            'percentage' => $percentage . '%'
+            'percentage' => $percentage . '%',
+            'lastMonth' => $lastMonthName,
+            'lastMonthTotal' => $insidenBulanLalu
         ];
 
-        // Hitung jumlah insiden per ruangan
         $insidenPerRuangan = Insiden::with('ruanganRelasi')
             ->select('ruangan', DB::raw('count(*) as total'))
             ->groupBy('ruangan')
@@ -100,6 +100,7 @@ class DashboardController extends Controller
             ],
             'monthlyData' => $monthlyData,
             'selectedMonths' => $selectedMonths,
+            'selectedYear' => $selectedYear,
             'insidenPerRuangan' => $insidenPerRuangan
         ]);
     }
@@ -107,29 +108,33 @@ class DashboardController extends Controller
     public function filter(Request $request)
     {
         $selectedMonths = $request->months ?? [];
+        $selectedYear = $request->year ?? date('Y');
         
-        // Tambahkan query untuk mengambil insiden
-        $insiden = Insiden::whereIn(DB::raw('MONTH(created_at)'), $selectedMonths)
-            ->whereYear('created_at', date('Y'))
+        // Validasi tahun
+        if (!is_numeric($selectedYear) || $selectedYear < 2000 || $selectedYear > 2100) {
+            return response()->json([
+                'error' => 'Tahun tidak valid'
+            ], 400);
+        }
+        
+        $insiden = Insiden::whereIn(DB::raw('MONTH(waktu_insiden)'), $selectedMonths)
+            ->whereYear('waktu_insiden', $selectedYear)
             ->get();
             
-        // Ambil semua jenis insiden yang unik
         $jenisInsiden = Insiden::select('jenis_insiden')->distinct()->get();
         
-        // Inisialisasi array untuk menyimpan data per jenis insiden per bulan
         $dataPerJenisPerBulan = [];
         
         foreach ($jenisInsiden as $jenis) {
             $dataPerJenisPerBulan[$jenis->jenis_insiden] = array_fill(1, 12, 0);
             
-            // Hitung jumlah insiden per bulan untuk setiap jenis
             $insidenPerBulan = Insiden::select(
-                DB::raw('MONTH(created_at) as bulan'),
+                DB::raw('MONTH(waktu_insiden) as bulan'),
                 DB::raw('COUNT(*) as total')
             )
             ->where('jenis_insiden', $jenis->jenis_insiden)
-            ->whereYear('created_at', date('Y'))
-            ->whereIn(DB::raw('MONTH(created_at)'), $selectedMonths)
+            ->whereYear('waktu_insiden', $selectedYear)
+            ->whereIn(DB::raw('MONTH(waktu_insiden)'), $selectedMonths)
             ->groupBy('bulan')
             ->get();
             
@@ -138,13 +143,12 @@ class DashboardController extends Controller
             }
         }
 
-        // Hitung total insiden per bulan yang difilter
         $insidenTotal = Insiden::select(
-            DB::raw('MONTH(created_at) as bulan'),
+            DB::raw('MONTH(waktu_insiden) as bulan'),
             DB::raw('COUNT(*) as total')
         )
-        ->whereYear('created_at', date('Y'))
-        ->whereIn(DB::raw('MONTH(created_at)'), $selectedMonths)
+        ->whereIn(DB::raw('YEAR(waktu_insiden)'), [date('Y'), date('Y', strtotime('+1 year'))])
+        ->whereIn(DB::raw('MONTH(waktu_insiden)'), $selectedMonths)
         ->groupBy('bulan')
         ->get();
 
@@ -158,19 +162,21 @@ class DashboardController extends Controller
             $dataPerBulan['total'][$item->bulan] = $item->total;
         }
 
-        // Hitung data untuk bulan ini dan persentase
         $currentMonth = date('m');
         $currentYear = date('Y');
         
-        $insidenBulanIni = Insiden::whereMonth('created_at', $currentMonth)
-            ->whereYear('created_at', $currentYear)
-            ->count();
-            
         $lastMonth = date('m', strtotime('-1 month'));
         $lastMonthYear = $lastMonth == 12 ? $currentYear - 1 : $currentYear;
         
-        $insidenBulanLalu = Insiden::whereMonth('created_at', $lastMonth)
-            ->whereYear('created_at', $lastMonthYear)
+        setlocale(LC_TIME, 'id_ID');
+        $lastMonthName = strftime('%B', strtotime("$lastMonthYear-$lastMonth-01"));
+        
+        $insidenBulanIni = Insiden::whereMonth('waktu_insiden', $currentMonth)
+            ->whereYear('waktu_insiden', $currentYear)
+            ->count();
+            
+        $insidenBulanLalu = Insiden::whereMonth('waktu_insiden', $lastMonth)
+            ->whereYear('waktu_insiden', $lastMonthYear)
             ->count();
         
         $percentage = $insidenBulanLalu > 0 
@@ -179,10 +185,11 @@ class DashboardController extends Controller
             
         $monthlyData = [
             'month' => $insidenBulanIni,
-            'percentage' => $percentage . '%'
+            'percentage' => $percentage . '%',
+            'lastMonth' => $lastMonthName,
+            'lastMonthTotal' => $insidenBulanLalu
         ];
 
-        // Hitung jumlah insiden per ruangan
         $insidenPerRuangan = Insiden::with('ruanganRelasi')
             ->select('ruangan', DB::raw('count(*) as total'))
             ->groupBy('ruangan')
@@ -199,6 +206,7 @@ class DashboardController extends Controller
             ],
             'monthlyData' => $monthlyData,
             'selectedMonths' => $selectedMonths,
+            'selectedYear' => $selectedYear,
             'insidenPerRuangan' => $insidenPerRuangan
         ]);
     }
@@ -206,5 +214,33 @@ class DashboardController extends Controller
     public function resetFilter()
     {
         return redirect()->route('dashboard')->with('success', 'Filter berhasil direset');
+    }
+
+    public function getData(Request $request)
+    {
+        $year = $request->query('year', date('Y'));
+        
+        if (!is_numeric($year) || $year < 2020 || $year > (date('Y') + 1)) {
+            return response()->json(['error' => 'Tahun tidak valid'], 400);
+        }
+
+        $insidenTotal = Insiden::select(
+            DB::raw('MONTH(waktu_insiden) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+        ->whereYear('waktu_insiden', $year)
+        ->groupBy('bulan')
+        ->get();
+
+        $dataPerBulan = array_fill(0, 12, 0);
+        
+        foreach($insidenTotal as $item) {
+            $dataPerBulan[$item->bulan - 1] = $item->total;
+        }
+
+        return response()->json([
+            'total' => $dataPerBulan,
+            'year' => $year
+        ]);
     }
 }

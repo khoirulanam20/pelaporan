@@ -83,7 +83,7 @@
                                         <li>
                                             <a href="#" class="dropdown-item" data-bs-toggle="modal"
                                                 data-bs-target="#filterModal">
-                                                Filter Bulan
+                                                Filter
                                             </a>
                                             <form action="{{ route('dashboard.reset-filter') }}" method="POST" id="resetFilterForm">
                                                 @csrf
@@ -107,19 +107,19 @@
                             <div class="col">
                                 <div class="p-3">
                                     <h5 class="mb-0">{{ $insiden->count() }}</h5>
-                                    <small class="mb-0">Overall Insiden</small>
+                                    <small class="mb-0">Overall Insiden {{ $selectedYear }}</small>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="p-3">
-                                    <h5 class="mb-0">{{ $monthlyData['month'] }}</h5>
-                                    <small class="mb-0">Insiden Bulan Ini</small>
+                                    <h5 class="mb-0">{{ $monthlyData['month'] ?? 0 }}</h5>
+                                    <small class="mb-0">Insiden Bulan {{ now()->format('F Y') }}</small>
                                 </div>
                             </div>
                             <div class="col">
                                 <div class="p-3">
                                     <h5 class="mb-0">{{ $monthlyData['percentage'] }}</h5>
-                                    <small class="mb-0">Kenaikan Jumlah Insiden</small>
+                                    <small class="mb-0">Kenaikan Jumlah Insiden dari {{ now()->subMonth()->format('F Y') }}</small>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +180,7 @@
                                 <li>
                                     <a href="#" class="dropdown-item" data-bs-toggle="modal"
                                         data-bs-target="#filterModal">
-                                        Filter Bulan
+                                        Filter
                                     </a>
                                     <form action="{{ route('dashboard.reset-filter') }}" method="POST" id="resetFilterForm">
                                         @csrf
@@ -205,21 +205,21 @@
                                     <th>Jenis Insiden</th>
                                     @if (!empty($selectedMonths))
                                         @foreach ($selectedMonths as $bulan)
-                                            <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
+                                            <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }} {{ $selectedYear }}</th>
                                         @endforeach
                                     @else
-                                        <th>Januari</th>
-                                        <th>Februari</th>
-                                        <th>Maret</th>
-                                        <th>April</th>
-                                        <th>Mei</th>
-                                        <th>Juni</th>
-                                        <th>Juli</th>
-                                        <th>Agustus</th>
-                                        <th>September</th>
-                                        <th>Oktober</th>
-                                        <th>November</th>
-                                        <th>Desember</th>
+                                        <th>Januari {{ $selectedYear }}</th>
+                                        <th>Februari {{ $selectedYear }}</th>
+                                        <th>Maret {{ $selectedYear }}</th>
+                                        <th>April {{ $selectedYear }}</th>
+                                        <th>Mei {{ $selectedYear }}</th>
+                                        <th>Juni {{ $selectedYear }}</th>
+                                        <th>Juli {{ $selectedYear }}</th>
+                                        <th>Agustus {{ $selectedYear }}</th>
+                                        <th>September {{ $selectedYear }}</th>
+                                        <th>Oktober {{ $selectedYear }}</th>
+                                        <th>November {{ $selectedYear }}</th>
+                                        <th>Desember {{ $selectedYear }}</th>
                                     @endif
                                 </tr>
                             </thead>
@@ -258,6 +258,20 @@
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
+                                    <label class="form-label">Pilih Tahun</label>
+                                    <select name="year" class="form-control mb-3">
+                                        @php
+                                            $currentYear = date('Y');
+                                            $startYear =  $currentYear - 2;
+                                            $endYear = $currentYear + 1;
+                                        @endphp
+                                        @for($year = $startYear; $year <= $endYear; $year++)
+                                            <option value="{{ $year }}" {{ ($selectedYear ?? $currentYear) == $year ? 'selected' : '' }}>
+                                                {{ $year }}
+                                            </option>
+                                        @endfor
+                                    </select>
+
                                     <label class="form-label">Pilih Bulan</label>
                                     <div class="row g-3">
                                         <div class="col-md-4">
@@ -341,9 +355,11 @@
 
         @section('script')
             <script src="{{ asset('admin/assets/js/index.js') }}"></script>
+            <script src="{{ asset('admin/assets/js/chart2.js') }}"></script>
             <script>
-                var dataInsiden = @json($dataInsiden);
-                var selectedMonths = @json($selectedMonths ?? []);
                 var insidenPerRuangan = @json($insidenPerRuangan);
+                var dataInsiden = @json($dataInsiden);
+                var selectedMonths = {!! json_encode($selectedMonths ?? []) !!};
+                var selectedYear = {{ $selectedYear ?? 'new Date().getFullYear()' }};
             </script>
         @endsection
