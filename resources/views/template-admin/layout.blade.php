@@ -36,7 +36,7 @@
         <div class="sidebar-wrapper" data-simplebar="true">
             <div class="sidebar-header">
 				<div>
-					<h4 class="logo-text">Pelaporan</h4>
+					<h5 class="logo-text">Pelaporan IKP</h5>
 				</div>
 				<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
 				</div>

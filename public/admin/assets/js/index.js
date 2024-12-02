@@ -71,71 +71,94 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       }
   });
+
+  // Reset filter form submission
+  document.getElementById('resetFilterForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Submit form
+      this.submit();
+      
+      // Reset select element ke default
+      document.querySelector('select[name="months[]"]').selectedIndex = -1;
+  });
 });	 
- 
+
+// Chart 2 - Insiden per Ruangan
+function initializeChart2() {
+    const ctx2 = document.getElementById("chart2")?.getContext('2d');
+    if (!ctx2) return;
+
+    // Persiapkan data
+    let labels = [];
+    let data = [];
+
+    if (Array.isArray(insidenPerRuangan) && insidenPerRuangan.length > 0) {
+        labels = insidenPerRuangan.map(item => 
+            item.ruangan_relasi?.nama_ruangan || 'Ruangan tidak dikenal'
+        );
+        data = insidenPerRuangan.map(item => item.total || 0);
+    } else {
+        console.error('insidenPerRuangan is not an array or is empty');
+    }
+
+    // Buat warna gradien
+    const backgroundColors = data.map((_, index) => {
+        const gradient = ctx2.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, `hsl(${index * 360/data.length}, 70%, 50%)`);
+        gradient.addColorStop(1, `hsl(${index * 360/data.length}, 70%, 60%)`);
+        return gradient;
+    });
+
+    new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Total Insiden per Ruangan',
+                data,
+                backgroundColor: backgroundColors,
+                hoverBackgroundColor: backgroundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        padding: 20,
+                        boxWidth: 12
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(context) {
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${context.label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Panggil fungsi saat dokumen siap
+document.addEventListener('DOMContentLoaded', initializeChart2);
 
 $(function() {
     "use strict";
 	 
 // chart 2
 
- var ctx = document.getElementById("chart2").getContext('2d');
 
-  var gradientStroke1 = ctx.createLinearGradient(0, 0, 0, 300);
-      gradientStroke1.addColorStop(0, '#fc4a1a');
-      gradientStroke1.addColorStop(1, '#f7b733');
-
-  var gradientStroke2 = ctx.createLinearGradient(0, 0, 0, 300);
-      gradientStroke2.addColorStop(0, '#4776e6');
-      gradientStroke2.addColorStop(1, '#8e54e9');
-
-
-  var gradientStroke3 = ctx.createLinearGradient(0, 0, 0, 300);
-      gradientStroke3.addColorStop(0, '#ee0979');
-      gradientStroke3.addColorStop(1, '#ff6a00');
-	  
-	var gradientStroke4 = ctx.createLinearGradient(0, 0, 0, 300);
-      gradientStroke4.addColorStop(0, '#14abef');
-      gradientStroke4.addColorStop(1, '#14abef');
-
-      var myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ["Jeans", "T-Shirts", "Shoes", "Lingerie"],
-          datasets: [{
-            backgroundColor: [
-              gradientStroke1,
-              gradientStroke2,
-              gradientStroke3,
-              gradientStroke4
-            ],
-            hoverBackgroundColor: [
-              gradientStroke1,
-              gradientStroke2,
-              gradientStroke3,
-              gradientStroke4
-            ],
-            data: [25, 80, 25, 25],
-			borderWidth: [1, 1, 1, 1]
-          }]
-        },
-        options: {
-			maintainAspectRatio: false,
-			cutoutPercentage: 75,
-            legend: {
-			  position: 'bottom',
-              display: false,
-			  labels: {
-                boxWidth:8
-              }
-            },
-			tooltips: {
-			  displayColors:false,
-			}
-        }
-      });
-
-   
 
 // worl map
 

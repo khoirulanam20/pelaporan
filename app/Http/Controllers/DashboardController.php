@@ -83,6 +83,12 @@ class DashboardController extends Controller
             'percentage' => $percentage . '%'
         ];
 
+        // Hitung jumlah insiden per ruangan
+        $insidenPerRuangan = Insiden::with('ruanganRelasi')
+            ->select('ruangan', DB::raw('count(*) as total'))
+            ->groupBy('ruangan')
+            ->get();
+
         return view('pageadmin.dashboard.index', [
             'insiden' => $insiden,
             'jenisInsiden' => $jenisInsiden,
@@ -93,17 +99,14 @@ class DashboardController extends Controller
                 'total' => array_values($dataPerBulan['total'])
             ],
             'monthlyData' => $monthlyData,
-            'selectedMonths' => $selectedMonths
+            'selectedMonths' => $selectedMonths,
+            'insidenPerRuangan' => $insidenPerRuangan
         ]);
     }
 
     public function filter(Request $request)
     {
         $selectedMonths = $request->months ?? [];
-        
-        if (count($selectedMonths) > 3) {
-            return redirect()->route('dashboard')->with('error', 'Pilih maksimal 3 bulan');
-        }
         
         // Tambahkan query untuk mengambil insiden
         $insiden = Insiden::whereIn(DB::raw('MONTH(created_at)'), $selectedMonths)
@@ -179,6 +182,12 @@ class DashboardController extends Controller
             'percentage' => $percentage . '%'
         ];
 
+        // Hitung jumlah insiden per ruangan
+        $insidenPerRuangan = Insiden::with('ruanganRelasi')
+            ->select('ruangan', DB::raw('count(*) as total'))
+            ->groupBy('ruangan')
+            ->get();
+
         return view('pageadmin.dashboard.index', [
             'insiden' => $insiden,
             'jenisInsiden' => $jenisInsiden,
@@ -189,7 +198,13 @@ class DashboardController extends Controller
                 'total' => array_values($dataPerBulan['total'])
             ],
             'monthlyData' => $monthlyData,
-            'selectedMonths' => $selectedMonths
+            'selectedMonths' => $selectedMonths,
+            'insidenPerRuangan' => $insidenPerRuangan
         ]);
+    }
+
+    public function resetFilter()
+    {
+        return redirect()->route('dashboard')->with('success', 'Filter berhasil direset');
     }
 }

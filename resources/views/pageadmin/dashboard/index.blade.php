@@ -67,7 +67,7 @@
             </div><!--end row-->
 
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-lg-8">
                     <div class="card radius-10">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
@@ -85,6 +85,12 @@
                                                 data-bs-target="#filterModal">
                                                 Filter Bulan
                                             </a>
+                                            <form action="{{ route('dashboard.reset-filter') }}" method="POST" id="resetFilterForm">
+                                                @csrf
+                                                <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('resetFilterForm').submit();">
+                                                    Reset Filter
+                                                </a>
+                                            </form>
                                         </li>
                                     </ul>
                                 </div>
@@ -119,6 +125,45 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-12 col-lg-4">
+                    <div class="card radius-10">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <h6 class="mb-0">Insiden Berdasarkan Ruangan</h6>
+                                </div>
+                                <div class="dropdown ms-auto">
+                                    <a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+                                        data-bs-toggle="dropdown"><i
+                                            class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="javascript:;">Action</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:;">Another action</a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:;">Something else here</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>  
+                            <div class="chart-container-2 mt-4">
+                                <canvas id="chart2"></canvas>
+                            </div>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            @foreach ($insidenPerRuangan as $data)
+                                <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+                                    {{ $data->ruanganRelasi->nama_ruangan }} <span class="badge bg-primary rounded-pill">{{ $data->total }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="card radius-10">
                 <div class="card-body">
@@ -127,7 +172,8 @@
                             <h6 class="mb-0">Insiden Terbaru</h6>
                         </div>
                         <div class="dropdown ms-auto">
-                            <a class="dropdown-toggle dropdown-toggle-nocaret" href="#" data-bs-toggle="dropdown"><i
+                            <a class="dropdown-toggle dropdown-toggle-nocaret" href="#"
+                                data-bs-toggle="dropdown"><i
                                     class='bx bx-dots-horizontal-rounded font-22 text-option'></i>
                             </a>
                             <ul class="dropdown-menu">
@@ -136,6 +182,12 @@
                                         data-bs-target="#filterModal">
                                         Filter Bulan
                                     </a>
+                                    <form action="{{ route('dashboard.reset-filter') }}" method="POST" id="resetFilterForm">
+                                        @csrf
+                                        <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('resetFilterForm').submit();">
+                                            Reset Filter
+                                        </a>
+                                    </form>
                                     <a href="{{ route('insiden.export') }}" class="dropdown-item">
                                         Export Data
                                     </a>
@@ -143,6 +195,8 @@
                             </ul>
                         </div>
                     </div>
+
+
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -191,45 +245,88 @@
                 </div>
             </div>
 
-                <!-- Modal Filter -->
+            <!-- Modal Filter -->
             <div class="modal fade" id="filterModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Filter Berdasarkan Bulan</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <form action="{{ route('dashboard.filter') }}" method="POST">
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label class="form-label">Pilih Bulan (Maksimal 3)</label>
-                                    <select name="months[]" class="form-select" multiple>
-                                        <option value="1" {{ in_array(1, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            Januari</option>
-                                        <option value="2" {{ in_array(2, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            Februari</option>
-                                        <option value="3" {{ in_array(3, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            Maret</option>
-                                        <option value="4" {{ in_array(4, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            April</option>
-                                        <option value="5" {{ in_array(5, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            Mei</option>
-                                        <option value="6" {{ in_array(6, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            Juni</option>
-                                        <option value="7" {{ in_array(7, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            Juli</option>
-                                        <option value="8" {{ in_array(8, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            Agustus</option>
-                                        <option value="9" {{ in_array(9, $selectedMonths ?? []) ? 'selected' : '' }}>
-                                            September</option>
-                                        <option value="10"
-                                            {{ in_array(10, $selectedMonths ?? []) ? 'selected' : '' }}>Oktober</option>
-                                        <option value="11"
-                                            {{ in_array(11, $selectedMonths ?? []) ? 'selected' : '' }}>November</option>
-                                        <option value="12"
-                                            {{ in_array(12, $selectedMonths ?? []) ? 'selected' : '' }}>Desember</option>
-                                    </select>
+                                    <label class="form-label">Pilih Bulan</label>
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="1" id="bulan1" 
+                                                    {{ in_array(1, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan1">Januari</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="2" id="bulan2"
+                                                    {{ in_array(2, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan2">Februari</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="3" id="bulan3"
+                                                    {{ in_array(3, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan3">Maret</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="4" id="bulan4"
+                                                    {{ in_array(4, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan4">April</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="5" id="bulan5"
+                                                    {{ in_array(5, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan5">Mei</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="6" id="bulan6"
+                                                    {{ in_array(6, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan6">Juni</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="7" id="bulan7"
+                                                    {{ in_array(7, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan7">Juli</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="8" id="bulan8"
+                                                    {{ in_array(8, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan8">Agustus</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="9" id="bulan9"
+                                                    {{ in_array(9, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan9">September</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="10" id="bulan10"
+                                                    {{ in_array(10, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan10">Oktober</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="11" id="bulan11"
+                                                    {{ in_array(11, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan11">November</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="months[]" value="12" id="bulan12"
+                                                    {{ in_array(12, $selectedMonths ?? []) ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="bulan12">Desember</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -247,15 +344,6 @@
             <script>
                 var dataInsiden = @json($dataInsiden);
                 var selectedMonths = @json($selectedMonths ?? []);
-            </script>
-            <script>
-                document.querySelector('select[name="months[]"]').addEventListener('change', function() {
-                    if (this.selectedOptions.length > 3) {
-                        alert('Anda hanya dapat memilih maksimal 3 bulan');
-                        Array.from(this.selectedOptions)
-                            .slice(3)
-                            .forEach(option => option.selected = false);
-                    }
-                });
+                var insidenPerRuangan = @json($insidenPerRuangan);
             </script>
         @endsection
