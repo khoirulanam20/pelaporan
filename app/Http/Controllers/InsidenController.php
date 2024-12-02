@@ -11,7 +11,7 @@ class InsidenController extends Controller
 {
     public function index()
     {
-        $insiden = Insiden::with(['noRm', 'ruanganRelasi'])->get();
+        $insiden = Insiden::with(['noRm', 'ruanganRelasi', 'ruanganTempat', 'ruanganUnit'])->get();
         return view('pageadmin.insiden.index', compact('insiden'));
     }
 

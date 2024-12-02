@@ -99,7 +99,43 @@
         </tbody>
     </table>
 
-    <h3>2. Jenis Insiden</h3>
+    <h3>2. Insiden</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Insiden</th>
+                @if (!empty($selectedMonths))
+                    @foreach ($selectedMonths as $bulan)
+                        <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
+                    @endforeach
+                @else
+                    @for ($bulan = 1; $bulan <= 12; $bulan++)
+                        <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
+                    @endfor
+                @endif
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($insidenPerBulan as $insiden => $data)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $insiden }}</td>
+                    @if (!empty($selectedMonths))
+                        @foreach ($selectedMonths as $bulan)
+                            <td>{{ $data[$bulan] }}</td>
+                        @endforeach
+                    @else
+                        @for ($bulan = 1; $bulan <= 12; $bulan++)
+                            <td>{{ $data[$bulan] }}</td>
+                        @endfor
+                    @endif
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <h3>3. Jenis Insiden</h3>
     <table class="table">
         <thead>
             <tr>
@@ -147,7 +183,7 @@
         </tbody>
     </table>
 
-    <h3>3. Menurut Waktu Grading</h3>
+    <h3>4. Menurut Waktu Grading</h3>
     <table class="table">
         <thead>
             <tr>

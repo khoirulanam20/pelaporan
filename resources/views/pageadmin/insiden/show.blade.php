@@ -91,11 +91,11 @@
                                 </tr>
                                 <tr>
                                     <th>Tempat Insiden</th>
-                                    <td>{{ $insiden->tempat_insiden }}</td>
+                                    <td>{{ $insiden->ruanganTempat ? $insiden->ruanganTempat->nama_ruangan : $insiden->tempat_insiden }}</td>
                                 </tr>
                                 <tr>
                                     <th>Unit Penyebab Insiden</th>
-                                    <td>{{ $insiden->unit_penyebab_insiden }}</td>
+                                    <td>{{ $insiden->ruanganUnit ? $insiden->ruanganUnit->nama_ruangan : $insiden->unit_penyebab_insiden }}</td>
                                 </tr>
                             </table>
                         </div>

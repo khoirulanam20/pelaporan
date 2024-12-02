@@ -70,7 +70,31 @@
         </tbody>
     </table>
 
-    <h3>2. Jenis Insiden</h3>
+    <h3>2. Insiden</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Insiden</th>
+                @foreach ($selectedMonths as $bulan)
+                    <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}</th>
+                @endforeach
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($insidenPerBulan as $insiden => $data)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $insiden }}</td>
+                    @foreach ($selectedMonths as $bulan)
+                        <td>{{ $data[$bulan] }}</td>
+                    @endforeach
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <h3>3. Jenis Insiden</h3>
     <table>
         <thead>
             <tr>
@@ -94,7 +118,7 @@
         </tbody>
     </table>
 
-    <h3>3. Menurut Waktu Grading</h3>
+    <h3>4. Menurut Waktu Grading</h3>
     <table>
         <thead>
             <tr>
@@ -120,7 +144,7 @@
         </tbody>
     </table>
 
-    <h3>4. Tempat Insiden</h3>
+    <h3>5. Tempat Insiden</h3>
     <table>
         <thead>
             <tr>

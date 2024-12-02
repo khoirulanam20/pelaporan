@@ -38,8 +38,8 @@
                                 <td>{{ $item->noRm->no_rm }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->waktu_insiden)->format('d/m/Y H:i') }}</td>
                                 <td>{{ $item->insiden }}</td>
-                                <td>{{ $item->tempat_insiden }}</td>
-                                <td>{{ $item->unit_penyebab_insiden }}</td>
+                                <td>{{ $item->ruanganTempat ? $item->ruanganTempat->nama_ruangan : $item->tempat_insiden }}</td>
+                                <td>{{ $item->ruanganUnit ? $item->ruanganUnit->nama_ruangan : $item->unit_penyebab_insiden }}</td>
                                 <td>{{ $item->jenis_insiden }}</td>
                                 <td>{{ $item->kronologi_kejadian }}</td>
                                 <td>

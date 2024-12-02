@@ -23,7 +23,7 @@ use App\Http\Controllers\{
 |
 */
 
-Route::get('/', [BerandaController::class, 'index'])->name('beranda');
+Route::get('/', [BerandaController::class, 'guestIndex'])->name('guest.index');
 
 // Auth
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -53,8 +53,8 @@ Route::group(['middleware' => ['role:admin,user']], function () {
     Route::get('/dashboard/data', [DashboardController::class, 'getData'])->name('dashboard.getData');
 });
 
-Route::get('/guest', [InsidenController::class, 'guestIndex'])->name('guest.index');
-Route::post('/guest', [InsidenController::class, 'guestStore'])->name('guest.store');
+// Route::get('/', [BerandaController::class, 'guestIndex'])->name('guest.index');
+Route::post('/guest', [BerandaController::class, 'guestStore'])->name('guest.store');
 Route::get('/insiden/export', [DashboardController::class, 'exportPDF'])->name('insiden.export');
 Route::get('/dashboard/export', [DashboardController::class, 'exportPDF'])->name('dashboard.export');
 Route::get('/dashboard/export-word', [DashboardController::class, 'exportWord'])->name('dashboard.export-word');

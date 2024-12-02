@@ -408,15 +408,46 @@ class DashboardController extends Controller
             $tempatInsidenData[$data->tempat_insiden]['total'] += $data->total;
         }
 
+        $insidenPerBulan = [];
+        foreach ($jenisInsiden as $jenis) {
+            $insidenPerBulan[$jenis->jenis_insiden] = [];
+            foreach ($selectedMonths as $bulan) {
+                $insidenPerBulan[$jenis->jenis_insiden][$bulan] = $jumlahInsidenPerBulan[$jenis->jenis_insiden][$bulan];
+            }
+        }
+
+        $insidenData = DB::table('insiden')
+            ->select(
+                'insiden',
+                DB::raw('MONTH(waktu_insiden) as bulan'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->whereYear('waktu_insiden', $selectedYear)
+            ->whereIn(DB::raw('MONTH(waktu_insiden)'), $selectedMonths)
+            ->groupBy('insiden', 'bulan')
+            ->orderBy('insiden')
+            ->get();
+
+        // Menyusun data insiden
+        $insidenPerBulan = [];
+        foreach ($insidenData as $data) {
+            if (!isset($insidenPerBulan[$data->insiden])) {
+                $insidenPerBulan[$data->insiden] = array_fill(1, 12, 0);
+            }
+            $insidenPerBulan[$data->insiden][$data->bulan] = $data->total;
+        }
+
         $data = [
             'jenisInsiden' => $jenisInsiden,
             'jumlahInsidenPerBulan' => $jumlahInsidenPerBulan,
+            'insidenPerBulan' => $insidenPerBulan,
             'selectedMonths' => $selectedMonths,
             'selectedYear' => $selectedYear,
             'title' => 'Laporan Insiden - ' . $selectedYear,
             'dataInsiden' => $dataInsiden,
             'gradingData' => $gradingData,
             'tempatInsidenData' => $tempatInsidenData
+            
         ];
 
         $pdf = PDF::loadView('pageadmin.dashboard.print', $data);
@@ -442,7 +473,7 @@ class DashboardController extends Controller
             $selectedMonths = range(1, 12);
         }
         
-        // Menggunakan data yang sama seperti exportPDF
+        // Mengambil data insiden per bulan
         $dataInsiden = collect();
         
         foreach ($selectedMonths as $index => $bulan) {
@@ -459,7 +490,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Mengambil data yang sama seperti sebelumnya
+        // Mengambil data grading
         $warnaGrading = DB::table('insiden')
             ->select(
                 'grading',
@@ -489,7 +520,7 @@ class DashboardController extends Controller
             }
         }
 
-        // Data lainnya sama seperti sebelumnya
+        // Mengambil data jenis insiden
         $jenisInsiden = Insiden::select('jenis_insiden')->distinct()->get();
         $jumlahInsidenPerBulan = [];
         
@@ -503,6 +534,7 @@ class DashboardController extends Controller
             }
         }
 
+        // Mengambil data tempat insiden
         $tempatInsiden = DB::table('insiden')
             ->select(
                 DB::raw('ROW_NUMBER() OVER (ORDER BY tempat_insiden) as no'),
@@ -516,6 +548,7 @@ class DashboardController extends Controller
             ->orderBy('tempat_insiden')
             ->get();
 
+        // Menyusun data tempat insiden
         $tempatInsidenData = [];
         foreach ($tempatInsiden as $data) {
             if (!isset($tempatInsidenData[$data->tempat_insiden])) {
@@ -530,9 +563,32 @@ class DashboardController extends Controller
             $tempatInsidenData[$data->tempat_insiden]['total'] += $data->total;
         }
 
+        // Mengambil data insiden per bulan
+        $insidenData = DB::table('insiden')
+            ->select(
+                'insiden',
+                DB::raw('MONTH(waktu_insiden) as bulan'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->whereYear('waktu_insiden', $selectedYear)
+            ->whereIn(DB::raw('MONTH(waktu_insiden)'), $selectedMonths)
+            ->groupBy('insiden', 'bulan')
+            ->orderBy('insiden')
+            ->get();
+
+        // Menyusun data insiden
+        $insidenPerBulan = [];
+        foreach ($insidenData as $data) {
+            if (!isset($insidenPerBulan[$data->insiden])) {
+                $insidenPerBulan[$data->insiden] = array_fill(1, 12, 0);
+            }
+            $insidenPerBulan[$data->insiden][$data->bulan] = $data->total;
+        }
+
         $data = [
             'jenisInsiden' => $jenisInsiden,
             'jumlahInsidenPerBulan' => $jumlahInsidenPerBulan,
+            'insidenPerBulan' => $insidenPerBulan,
             'selectedMonths' => $selectedMonths,
             'selectedYear' => $selectedYear,
             'title' => 'Laporan Insiden - ' . $selectedYear,
@@ -546,7 +602,6 @@ class DashboardController extends Controller
             'Content-Disposition' => 'attachment; filename="laporan-insiden.docx"'
         ];
 
-        return response()->view('pageadmin.dashboard.word', $data)
-            ->withHeaders($headers);
+        return response()->view('pageadmin.dashboard.word', $data)->withHeaders($headers);
     }
 }

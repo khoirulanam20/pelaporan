@@ -60,4 +60,14 @@ class Insiden extends Model
     {
         return $this->belongsTo(Ruangan::class, 'ruangan', 'id');
     }
+
+    public function ruanganTempat()
+    {
+        return $this->belongsTo(Ruangan::class, 'tempat_insiden', 'id');
+    }
+
+    public function ruanganUnit()
+    {
+        return $this->belongsTo(Ruangan::class, 'unit_penyebab_insiden', 'id');
+    }
 }
