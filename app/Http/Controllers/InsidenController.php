@@ -65,6 +65,13 @@ class InsidenController extends Controller
             'tanggal_investigasi_lengkap' => 'nullable|date'
         ]);
 
+        $noRm = NoRM::firstOrCreate(
+            ['no_rm' => $request->no_rm],
+            ['keterangan' => 'Auto generated from admin form']
+        );
+
+        $validated['no_rm'] = $noRm->id;
+
         Insiden::create($validated);
 
         return redirect()->route('insiden.index')

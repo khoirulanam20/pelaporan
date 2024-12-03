@@ -85,9 +85,11 @@
                                                 data-bs-target="#filterModal">
                                                 Filter
                                             </a>
-                                            <form action="{{ route('dashboard.reset-filter') }}" method="POST" id="resetFilterForm">
+                                            <form action="{{ route('dashboard.reset-filter') }}" method="POST"
+                                                id="resetFilterForm">
                                                 @csrf
-                                                <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('resetFilterForm').submit();">
+                                                <a href="#" class="dropdown-item"
+                                                    onclick="event.preventDefault(); document.getElementById('resetFilterForm').submit();">
                                                     Reset Filter
                                                 </a>
                                             </form>
@@ -119,7 +121,8 @@
                             <div class="col">
                                 <div class="p-3">
                                     <h5 class="mb-0">{{ $monthlyData['percentage'] }}</h5>
-                                    <small class="mb-0">Kenaikan Jumlah Insiden dari {{ now()->subMonth()->format('F Y') }}</small>
+                                    <small class="mb-0">Kenaikan Jumlah Insiden dari
+                                        {{ now()->subMonth()->format('F Y') }}</small>
                                 </div>
                             </div>
                         </div>
@@ -150,21 +153,65 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div>  
+                            </div>
                             <div class="chart-container-2 mt-4">
                                 <canvas id="chart2"></canvas>
                             </div>
                         </div>
                         <ul class="list-group list-group-flush">
                             @foreach ($insidenPerRuangan as $data)
-                                <li class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
-                                    {{ $data->ruanganRelasi->nama_ruangan }} <span class="badge bg-primary rounded-pill">{{ $data->total }}</span>
+                                <li
+                                    class="list-group-item d-flex bg-transparent justify-content-between align-items-center">
+                                    {{ $data->ruanganRelasi->nama_ruangan }} <span
+                                        class="badge bg-primary rounded-pill">{{ $data->total }}</span>
                                 </li>
                             @endforeach
                         </ul>
                     </div>
                 </div>
             </div>
+
+            <div class="col-12 d-flex">
+                <div class="card w-100 radius-10">
+                    <div class="card-body">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div>
+                                    <p class="mb-0 text-secondary">Insiden Terbanyak</p>
+                                    @php
+                                        $maxJenisInsiden = '';
+                                        $maxCount = 0;
+                                        
+                                        foreach ($jenisInsiden as $jenis) {
+                                            $count = 0;
+                                            if (!empty($selectedMonths)) {
+                                                foreach ($selectedMonths as $bulan) {
+                                                    $count += $dataPerJenisPerBulan[$jenis->jenis_insiden][$bulan];
+                                                }
+                                            } else {
+                                                for ($bulan = 1; $bulan <= 12; $bulan++) {
+                                                    $count += $dataPerJenisPerBulan[$jenis->jenis_insiden][$bulan];
+                                                }
+                                            }
+                                            
+                                            if ($count > $maxCount) {
+                                                $maxCount = $count;
+                                                $maxJenisInsiden = $jenis->jenis_insiden;
+                                            }
+                                        }
+                                    @endphp
+                                    <h4 class="my-1">{{ $maxJenisInsiden }}</h4>
+                                    <p class="mb-0 font-20">{{ $maxCount }} Kejadian ({{ $selectedYear }})</p>
+                                </div>
+                                <div class="widgets-icons-2 bg-gradient-cosmic text-white ms-auto">
+                                    <i class='bx bxs-error-circle'></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card radius-10">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
@@ -182,9 +229,11 @@
                                         data-bs-target="#filterModal">
                                         Filter
                                     </a>
-                                    <form action="{{ route('dashboard.reset-filter') }}" method="POST" id="resetFilterForm">
+                                    <form action="{{ route('dashboard.reset-filter') }}" method="POST"
+                                        id="resetFilterForm">
                                         @csrf
-                                        <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('resetFilterForm').submit();">
+                                        <a href="#" class="dropdown-item"
+                                            onclick="event.preventDefault(); document.getElementById('resetFilterForm').submit();">
                                             Reset Filter
                                         </a>
                                     </form>
@@ -208,7 +257,8 @@
                                     <th>Jenis Insiden</th>
                                     @if (!empty($selectedMonths))
                                         @foreach ($selectedMonths as $bulan)
-                                            <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }} {{ $selectedYear }}</th>
+                                            <th>{{ DateTime::createFromFormat('!m', $bulan)->format('F') }}
+                                                {{ $selectedYear }}</th>
                                         @endforeach
                                     @else
                                         <th>Januari {{ $selectedYear }}</th>
@@ -265,11 +315,12 @@
                                     <select name="year" class="form-control mb-3">
                                         @php
                                             $currentYear = date('Y');
-                                            $startYear =  $currentYear - 2;
+                                            $startYear = $currentYear - 2;
                                             $endYear = $currentYear + 1;
                                         @endphp
-                                        @for($year = $startYear; $year <= $endYear; $year++)
-                                            <option value="{{ $year }}" {{ ($selectedYear ?? $currentYear) == $year ? 'selected' : '' }}>
+                                        @for ($year = $startYear; $year <= $endYear; $year++)
+                                            <option value="{{ $year }}"
+                                                {{ ($selectedYear ?? $currentYear) == $year ? 'selected' : '' }}>
                                                 {{ $year }}
                                             </option>
                                         @endfor
@@ -279,66 +330,78 @@
                                     <div class="row g-3">
                                         <div class="col-md-4">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="1" id="bulan1" 
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="1" id="bulan1"
                                                     {{ in_array(1, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan1">Januari</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="2" id="bulan2"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="2" id="bulan2"
                                                     {{ in_array(2, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan2">Februari</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="3" id="bulan3"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="3" id="bulan3"
                                                     {{ in_array(3, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan3">Maret</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="4" id="bulan4"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="4" id="bulan4"
                                                     {{ in_array(4, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan4">April</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="5" id="bulan5"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="5" id="bulan5"
                                                     {{ in_array(5, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan5">Mei</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="6" id="bulan6"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="6" id="bulan6"
                                                     {{ in_array(6, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan6">Juni</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="7" id="bulan7"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="7" id="bulan7"
                                                     {{ in_array(7, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan7">Juli</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="8" id="bulan8"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="8" id="bulan8"
                                                     {{ in_array(8, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan8">Agustus</label>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="9" id="bulan9"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="9" id="bulan9"
                                                     {{ in_array(9, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan9">September</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="10" id="bulan10"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="10" id="bulan10"
                                                     {{ in_array(10, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan10">Oktober</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="11" id="bulan11"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="11" id="bulan11"
                                                     {{ in_array(11, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan11">November</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="months[]" value="12" id="bulan12"
+                                                <input class="form-check-input" type="checkbox" name="months[]"
+                                                    value="12" id="bulan12"
                                                     {{ in_array(12, $selectedMonths ?? []) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="bulan12">Desember</label>
                                             </div>

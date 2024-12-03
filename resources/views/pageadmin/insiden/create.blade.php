@@ -18,12 +18,7 @@
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label for="no_rm">No RM</label>
-                                <select name="no_rm" class="form-control" required>
-                                    <option value="">Pilih No RM</option>
-                                    @foreach($noRMs as $rm)
-                                        <option value="{{ $rm->id }}">{{ $rm->no_rm }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="no_rm" class="form-control" required>
                             </div>
                         </div>
 

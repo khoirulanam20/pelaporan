@@ -70,7 +70,19 @@ class BerandaController extends Controller
             'tanggal_investigasi_lengkap' => 'nullable|date'
         ]);
 
+        // Cari atau buat no_rm
+        $noRm = NoRM::firstOrCreate(
+            ['no_rm' => $request->no_rm],
+            ['keterangan' => 'Auto generated from web form']
+        );
+
+        // Ganti nilai no_rm dengan id dari NoRM
+        $validated['no_rm'] = $noRm->id;
+
+        // Buat insiden baru
         Insiden::create($validated);
-        return redirect()->route('guest.index')->with('success', 'Data insiden berhasil ditambahkan');
+
+        return redirect()->route('guest.index')
+            ->with('success', 'Data insiden berhasil ditambahkan');
     }
 }

@@ -163,6 +163,11 @@
         .form-section {
             background: white;
             padding: 40px 0;
+            display: none;
+        }
+
+        .form-section.show {
+            display: block;
         }
 
         .form-card {
@@ -258,7 +263,9 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}"><i class='bx bx-user' style="font-size: 1.5rem;"></i></a>
+                        <a class="nav-link" href="{{ route('login') }}">
+                            <i class='bx bx-user' style="font-size: 1.5rem;"></i>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -284,7 +291,9 @@
                             </div>
                         </div>
                         <div class="hero-button" style="margin-top: 2rem;">
-                            <a href="#form-section" class="btn btn-primary btn-lg">Lapor Insiden</a>
+                            <button id="showFormBtn" class="btn btn-primary btn-lg">
+                                <i class='bx bx-edit me-1'></i> Lapor Insiden
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -326,12 +335,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">No RM</label>
-                                        <select name="no_rm" class="form-control" required>
-                                            <option value="">Pilih No RM</option>
-                                            @foreach($noRMs as $rm)
-                                                <option value="{{ $rm->id }}">{{ $rm->no_rm }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="text" name="no_rm" class="form-control" required>
                                     </div>
                                 </div>
 
@@ -527,7 +531,7 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <p class="mb-0">Copyright © {{ date('Y') }} RSUD. All rights reserved.</p>
+            <p class="mb-0">Copyright © {{ date('Y') }} ANAM. All rights reserved.</p>
         </div>
     </footer>
 
@@ -559,6 +563,34 @@
             } else {
                 navbar.classList.remove('scrolled');
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const formSection = document.querySelector('.form-section');
+            const showFormBtn = document.getElementById('showFormBtn');
+            
+            // Sembunyikan form saat halaman dimuat
+            formSection.classList.remove('show');
+            
+            // Toggle form saat tombol Lapor Insiden diklik
+            showFormBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                formSection.classList.toggle('show');
+                
+                // Scroll ke form jika ditampilkan
+                if(formSection.classList.contains('show')) {
+                    formSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            
+            // Sembunyikan form saat mengklik di luar form
+            document.addEventListener('click', function(e) {
+                if (!formSection.contains(e.target) && 
+                    !showFormBtn.contains(e.target) && 
+                    formSection.classList.contains('show')) {
+                    formSection.classList.remove('show');
+                }
+            });
         });
     </script>
 </body>
